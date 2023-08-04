@@ -1,7 +1,5 @@
-from dotenv import load_dotenv
 from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 import textwrap
 import streamlit as st
