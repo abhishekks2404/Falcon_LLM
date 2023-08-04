@@ -80,15 +80,15 @@ def falcon_trans(question,transfrom,transto):
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
     )
-    repo_id = "tiiuae/falcon-40b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
+    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
     
     falcon_llm = HuggingFaceHub(
         repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 500}
     )
 
-    template = """Question: {question}
-
-Answer: You are a concise translation assistant. Translate the question from language {transfrom} to language {transto}. Then give the Output"""
+    template = """question : {question}
+ You are a concise translation assistant. Translate the question from language {transfrom} to language {transto}. 
+ """
     system_message_prompt = SystemMessagePromptTemplate.from_template(template)
     human_template = "{question}"
     human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
@@ -109,7 +109,7 @@ def falcon_email(name,to,sub,mail):
     repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
     
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 2000}
+        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 1000}
     )
 
     template = """You are an email Generator,
@@ -311,11 +311,11 @@ if (st.session_state.language):
 
    with col4:
       langtrans = st.text_input('Translate to')
-   title2 = st.text_input('Enter you text')
-   generate = st.button("Generate Summary")
-   if(generate):
+   title8 = st.text_input('Enter you text')
+   generate2 = st.button("Translate")
+   if(generate2):
       with st.spinner("Translating...."):
-            output = falcon_trans(title2,fromm,langtrans)
+            output = falcon_trans(title8,fromm,langtrans)
             st.write(output)
 
 if (st.session_state.sentiment): 
