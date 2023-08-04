@@ -41,59 +41,6 @@ keyy = st.session_state.hugkey
 
 
 
-st.set_page_config(page_title="Falcon LLM")
-with open("style.css") as source_des:
-    st.markdown(f"<style>{source_des.read()}</style>", unsafe_allow_html=True)
-
-
-with st.sidebar:
-   keyyy = st.text_input("Enter your Huggingface Token")
-   button_key = st.button("Enter Key")
-   if(button_key):
-        st.session_state.hugkey = keyyy
-        st.session_state.final = True
-        st.session_state.after = False        
-
-        
-        
-
-   
-        
-   st.caption("Get you Token -> login to huggingface -> Account settings -> Access Tokens")
-   
-   if(st.session_state.final):
-
-   
-        st.subheader("Try all Different Usecases")
-
-        question = st.button("Q/A Model")
-        
-        st.success("This section has no Fine-tuning, you can use any command to get whatever you want. This mode is best to test out the model as per your requirements.")
-        st.write("")
-        code = st.button("Code Generation")
-        st.success("This section has been Fine-tuned to provide the best code solutions, you can ask any coding question regarding any language. This mode is best to test out the model in coding aspects.")
-        st.write("")
-
-        textsum = st.button("Text Summarizer")
-        st.success("This model has been Fine-tuned to provide the best Summary from the enter paragraph or uploaded document.  ")
-        st.write("")
-
-        language = st.button("Language Translator")
-        st.success("This model has been prompted efficiently, you can use this model to translate your text.")
-        st.write("")
-
-        sentiment = st.button("Sentiment Analysis")
-        st.success("This Model will be analysing your emotions or sentiments from the text. You can test this to know more about the LLM regarding sentiments ")
-        st.write("")
-
-        email = st.button("Email Generator")
-        st.success("This model will let you curate any email as per your requirement.")
-        st.write("")
-
-
-        st.caption("All the Above model is Fine-Tuned as per the Falcon LLM, the model is working on 7 Billion paramters ")
-
-        
 
 def falcon(questions,keyy):
     falcon_llm = HuggingFaceHub(
@@ -226,6 +173,110 @@ Answer: Provide the required codes for the statement. Only provide the answer in
     print(response)
     return response
 
+st.set_page_config(page_title="Falcon LLM")
+with open("style.css") as source_des:
+    st.markdown(f"<style>{source_des.read()}</style>", unsafe_allow_html=True)
+
+
+with st.sidebar:
+   keyyy = st.text_input("Enter your Huggingface Token")
+   button_key = st.button("Enter Key")
+   if(button_key):
+        st.session_state.hugkey = keyyy
+        st.session_state.final = True
+        st.session_state.after = False        
+
+        
+        
+
+   
+        
+   st.caption("Get your Token -> login to huggingface -> Account settings -> Access Tokens")
+   
+   if(st.session_state.final):
+
+   
+        st.subheader("Try all Different Usecases")
+
+        question = st.button("Q/A Model")
+        
+        st.success("This section has no Fine-tuning, you can use any command to get whatever you want. This mode is best to test out the model as per your requirements.")
+        st.write("")
+        code = st.button("Code Generation")
+        st.success("This section has been Fine-tuned to provide the best code solutions, you can ask any coding question regarding any language. This mode is best to test out the model in coding aspects.")
+        st.write("")
+
+        textsum = st.button("Text Summarizer")
+        st.success("This model has been Fine-tuned to provide the best Summary from the enter paragraph or uploaded document.  ")
+        st.write("")
+
+        language = st.button("Language Translator")
+        st.success("This model has been prompted efficiently, you can use this model to translate your text.")
+        st.write("")
+
+        sentiment = st.button("Sentiment Analysis")
+        st.success("This Model will be analysing your emotions or sentiments from the text. You can test this to know more about the LLM regarding sentiments ")
+        st.write("")
+
+        email = st.button("Email Generator")
+        st.success("This model will let you curate any email as per your requirement.")
+        st.write("")
+
+
+        st.caption("All the Above model is Fine-Tuned as per the Falcon LLM, the model is working on 7 Billion paramters ")
+
+        if(question):
+            clear_chat_1()
+            st.session_state.question = True
+            st.session_state.code = False
+            st.session_state.textsum = False
+            st.session_state.language = False
+            st.session_state.sentiment = False
+            st.session_state.email = False
+
+
+        if(code):
+            clear_chat_2()
+            st.session_state.question = False
+            st.session_state.code = True
+            st.session_state.textsum = False
+            st.session_state.language = False
+            st.session_state.sentiment = False
+            st.session_state.email = False
+
+        if(textsum):
+            st.session_state.question = False
+            st.session_state.code = False
+            st.session_state.textsum = True
+            st.session_state.language = False
+            st.session_state.sentiment = False
+            st.session_state.email = False
+
+        if(language):
+            st.session_state.question = False
+            st.session_state.code = False
+            st.session_state.textsum = False
+            st.session_state.language = True
+            st.session_state.sentiment = False
+            st.session_state.email = False
+
+        if(sentiment):
+            st.session_state.question = False
+            st.session_state.code = False
+            st.session_state.textsum = False
+            st.session_state.language = False
+            st.session_state.sentiment = True
+            st.session_state.email = False
+
+        if(email):
+            st.session_state.question = False
+            st.session_state.code = False
+            st.session_state.textsum = False
+            st.session_state.language = False
+            st.session_state.sentiment = False
+            st.session_state.email = True
+
+        
 
 
 st.title("Falcon LLM")
@@ -233,56 +284,6 @@ if(st.session_state.after):
     st.caption("Enter your Hugging Face Token to access all the different model using FALCON LLM.")
     st.caption("Downloading the FALCON model in local is possible but to make it accessible for every one it needs to uploaded into a high speed server.")
 
-if(question):
-       clear_chat_1()
-       st.session_state.question = True
-       st.session_state.code = False
-       st.session_state.textsum = False
-       st.session_state.language = False
-       st.session_state.sentiment = False
-       st.session_state.email = False
-
-
-if(code):
-       clear_chat_2()
-       st.session_state.question = False
-       st.session_state.code = True
-       st.session_state.textsum = False
-       st.session_state.language = False
-       st.session_state.sentiment = False
-       st.session_state.email = False
-
-if(textsum):
-       st.session_state.question = False
-       st.session_state.code = False
-       st.session_state.textsum = True
-       st.session_state.language = False
-       st.session_state.sentiment = False
-       st.session_state.email = False
-
-if(language):
-       st.session_state.question = False
-       st.session_state.code = False
-       st.session_state.textsum = False
-       st.session_state.language = True
-       st.session_state.sentiment = False
-       st.session_state.email = False
-
-if(sentiment):
-       st.session_state.question = False
-       st.session_state.code = False
-       st.session_state.textsum = False
-       st.session_state.language = False
-       st.session_state.sentiment = True
-       st.session_state.email = False
-
-if(email):
-       st.session_state.question = False
-       st.session_state.code = False
-       st.session_state.textsum = False
-       st.session_state.language = False
-       st.session_state.sentiment = False
-       st.session_state.email = True
 
    
 
