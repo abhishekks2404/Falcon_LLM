@@ -71,6 +71,8 @@ div.css-1n76uvr.e1f1d6gn0 {
     
 }
 
+
+
 p {
     font-family: 'Montserrat';
     font-size: 12px;
@@ -107,17 +109,14 @@ div.st-bt {
 div.st-bx {
     color: white;
 }
-.stChatFloatingInputContainer.css-90vs21.e1d2x3se2 {
+.stChatFloatingInputContainer {
     background: rgb(0, 39, 74);
     border-radius: 1rem;
     padding: 3rem;
     margin-left: -20px;
 }
 
-input.st-ch {
-    color: rgb(0, 75, 104);
 
-}
 .css-1avcm0n.ezrtsby2 {
     background: none;
 }
@@ -157,6 +156,12 @@ button:hover {
 
 button.css-13ejsyy.ef3psqc11 {
     background: rgb(0, 32, 56);
+}
+
+button.css-13ejsyy.ef3psqc11:hover {
+    background-color: rgb(124, 0, 0);
+    color: black;
+    transition: 0.5s;
 }
 
 button.css-13ejsyy.ef3psqc6 {

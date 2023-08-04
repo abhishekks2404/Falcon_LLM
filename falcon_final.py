@@ -5,7 +5,6 @@ import streamlit as st
 
 
 
-HUGGINGFACEHUB_API_TOKEN = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 if "code" not in st.session_state:
            st.session_state.code = False
@@ -20,17 +19,91 @@ if "email" not in st.session_state:
 if "question" not in st.session_state:
         st.session_state.question =False
 
+if "final" not in st.session_state:
+        st.session_state.final =False
+
+if "after" not in st.session_state:
+        st.session_state.after =True
+
+if "hugkey" not in st.session_state:
+     st.session_state.hugkey = ""
 
 
-def falcon(questions):
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
+
+repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
+keyy = st.session_state.hugkey
+
+
+
+
+
     
-    falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
-    )
 
-    template = """Reply properly for the {question} .
-     """
+
+
+st.set_page_config(page_title="Falcon LLM")
+with open("style.css") as source_des:
+    st.markdown(f"<style>{source_des.read()}</style>", unsafe_allow_html=True)
+
+
+with st.sidebar:
+   keyyy = st.text_input("Enter your Huggingface Token")
+   button_key = st.button("Enter Key")
+   if(button_key):
+        st.session_state.hugkey = keyyy
+        st.session_state.final = True
+        st.session_state.after = False        
+
+        
+        
+
+   
+        
+   st.caption("Get you Token -> login to huggingface -> Account settings -> Access Tokens")
+   
+   if(st.session_state.final):
+
+   
+        st.subheader("Try all Different Usecases")
+
+        question = st.button("Q/A Model")
+        
+        st.success("This section has no Fine-tuning, you can use any command to get whatever you want. This mode is best to test out the model as per your requirements.")
+        st.write("")
+        code = st.button("Code Generation")
+        st.success("This section has been Fine-tuned to provide the best code solutions, you can ask any coding question regarding any language. This mode is best to test out the model in coding aspects.")
+        st.write("")
+
+        textsum = st.button("Text Summarizer")
+        st.success("This model has been Fine-tuned to provide the best Summary from the enter paragraph or uploaded document.  ")
+        st.write("")
+
+        language = st.button("Language Translator")
+        st.success("This model has been prompted efficiently, you can use this model to translate your text.")
+        st.write("")
+
+        sentiment = st.button("Sentiment Analysis")
+        st.success("This Model will be analysing your emotions or sentiments from the text. You can test this to know more about the LLM regarding sentiments ")
+        st.write("")
+
+        email = st.button("Email Generator")
+        st.success("This model will let you curate any email as per your requirement.")
+        st.write("")
+
+
+        st.caption("All the Above model is Fine-Tuned as per the Falcon LLM, the model is working on 7 Billion paramters ")
+
+        
+
+def falcon(questions,keyy):
+    falcon_llm = HuggingFaceHub(
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
+    
+
+    template = """Question: {question}
+
+Answer: Go through the Question and reply like human."""
 
     prompt = PromptTemplate(template=template, input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
@@ -39,12 +112,11 @@ def falcon(questions):
     
     return response
 
-def falcon_text(questions):
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
-    
+def falcon_text(questions,keyy):
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 2000}
-    )
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
+    
 
     template = """Question: {question}
 
@@ -57,12 +129,11 @@ Answer: Go through the Question and generate a concise summary for it."""
     return response
 
 
-def falcon_senti(questions):
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
-    
+def falcon_senti(questions,keyy):
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 2000}
-    )
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
+    
 
     template = """Question: {question}
 
@@ -74,17 +145,15 @@ Answer: Please analyze the sentiment of the following statement."""
     
     return response
 
-def falcon_trans(question,transfrom,transto):
+def falcon_trans(question,transfrom,transto,keyy):
     from langchain.prompts.chat import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
     )
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
-    
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 500}
-    )
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
 
     template = """question : {question}
  You are a concise translation assistant. Translate the question from language {transfrom} to language {transto}. 
@@ -100,17 +169,15 @@ def falcon_trans(question,transfrom,transto):
     return result
 
 
-def falcon_email(name,to,sub,mail):
+def falcon_email(name,to,sub,mail,keyy):
     from langchain.prompts.chat import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
     )
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
-    
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 1000}
-    )
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
 
     template = """You are an email Generator,
 
@@ -141,12 +208,12 @@ def clear_chat_2():
 
 
 
-def falcon_code(questions):
-    repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
-    
+def falcon_code(questions,keyy):
+
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, model_kwargs={"temperature": 0.1, "max_new_tokens": 2000}
-    )
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        )
+    
 
     template = """Question: {question}
 
@@ -160,44 +227,11 @@ Answer: Provide the required codes for the statement. Only provide the answer in
     return response
 
 
-st.set_page_config(page_title="Falcon LLM")
-with open("style.css") as source_des:
-    st.markdown(f"<style>{source_des.read()}</style>", unsafe_allow_html=True)
 
-
-with st.sidebar:
-   
-   st.subheader("Different Model")
-
-   question = st.button("Q/A Model")
-   
-   st.success("This section has no Fine-tuning, you can use any command to get whatever you want. This mode is best to test out the model as per your requirements.")
-   st.write("")
-   code = st.button("Code Generation")
-   st.success("This section has been Fine-tuned to provide the best code solutions, you can ask any coding question regarding any language. This mode is best to test out the model in coding aspects.")
-   st.write("")
-
-   textsum = st.button("Text Summarizer")
-   st.success("This model has been Fine-tuned to provide the best Summary from the enter paragraph or uploaded document.  ")
-   st.write("")
-
-   language = st.button("Language Translator")
-   st.success("This model has been prompted efficiently, you can use this model to translate your text.")
-   st.write("")
-
-   sentiment = st.button("Sentiment Analysis")
-   st.success("This Model will be analysing your emotions or sentiments from the text. You can test this to know more about the LLM regarding sentiments ")
-   st.write("")
-
-   email = st.button("Email Generator")
-   st.success("This model will let you curate any email as per your requirement.")
-   st.write("")
-
-
-   st.caption("All the Above model is Fine-Tuned as per the Falcon LLM, the model is working on 7 Billion paramters ")
-
- 
 st.title("Falcon LLM")
+if(st.session_state.after):
+    st.caption("Enter your Hugging Face Token to access all the different model using FALCON LLM.")
+    st.caption("Downloading the FALCON model in local is possible but to make it accessible for every one it needs to uploaded into a high speed server.")
 
 if(question):
        clear_chat_1()
@@ -261,11 +295,11 @@ if (st.session_state.question):
    for message in st.session_state.messages:
       st.chat_message(message["role"]).markdown(message["content"])
 
-   if prompt := st.chat_input("Hii dbot here to code"):
+   if prompt := st.chat_input("Search anything"):
                st.chat_message("user").markdown(prompt)
                st.session_state.messages.append({"role": "user", "content": prompt})
                with st.spinner("Thinking..."):
-                  response=falcon(prompt)
+                  response=falcon(prompt,st.session_state.hugkey)
                   st.chat_message("assistant").markdown(response)
                   st.session_state.messages.append({"role": "assistant", "content": response})
 
@@ -280,11 +314,11 @@ if (st.session_state.code):
    for message in st.session_state.messages:
       st.chat_message(message["role"]).markdown(message["content"])
 
-   if prompt := st.chat_input("Hii dbot here to code"):
+   if prompt := st.chat_input("Hi Coder!! Search for the code you want"):
                st.chat_message("user").markdown(prompt)
                st.session_state.messages.append({"role": "user", "content": prompt})
                with st.spinner("Generating..."):
-                  response=falcon_code(prompt)
+                  response=falcon_code(prompt,st.session_state.hugkey)
                   st.chat_message("assistant").markdown(response)
                   st.session_state.messages.append({"role": "assistant", "content": response})
 
@@ -298,7 +332,7 @@ if (st.session_state.textsum):
    generate = st.button("Generate Summary")
    if(generate):
       with st.spinner("Generating Summary...."):
-            output = falcon_text(title3)
+            output = falcon_text(title3,st.session_state.hugkey)
             st.write(output)
 
 
@@ -315,7 +349,7 @@ if (st.session_state.language):
    generate2 = st.button("Translate")
    if(generate2):
       with st.spinner("Translating...."):
-            output = falcon_trans(title8,fromm,langtrans)
+            output = falcon_trans(title8,fromm,langtrans,st.session_state.hugkey)
             st.write(output)
 
 if (st.session_state.sentiment): 
@@ -323,12 +357,13 @@ if (st.session_state.sentiment):
       st.caption("Type any Sentence with emotions to test it out (For example: I recently watched a heartwarming movie, and it made me feel so happy and uplifted.)")
       st.caption(" Positive Statement : I had an incredible experience during my vacation to the beach. The sunsets were breathtaking, the ocean waves were soothing, and the company of my friends made it even more enjoyable. I felt so relaxed and rejuvenated throughout the trip.")
       st.caption("Negative Statement: The recent economic downturn has caused significant hardships for many families. With job losses and financial instability, people are facing tough times. It's disheartening to see the struggles people are going through, and I hope for a quick recovery for everyone affected.")
+
       st.caption("Neutral Statements: The conference covered a wide range of topics and had informative sessions. It was well-organized, and the speakers were knowledgeable. Overall, it was a satisfactory experience, and I appreciate the effort put into organizing the event.")
       title1 = st.text_input('Enter you text')
       generate = st.button("Get Your Sentiments")
       if(generate):
          with st.spinner("Analysing Sentiments...."):
-            output = falcon_senti(title1)
+            output = falcon_senti(title1,st.session_state.hugkey)
             st.write(output)
 
 if (st.session_state.email): 
@@ -346,7 +381,7 @@ if (st.session_state.email):
 
    if(generate):
       with st.spinner("Generating Email...."):
-            output = falcon_email(name,to,sub,mail)
+            output = falcon_email(name,to,sub,mail,st.session_state.hugkey)
             st.write(output)
             
    
