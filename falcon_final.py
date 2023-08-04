@@ -1,4 +1,3 @@
-import os
 from dotenv import load_dotenv
 from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
@@ -6,11 +5,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 import textwrap
 import streamlit as st
-import requests
 
 
-load_dotenv()
-HUGGINGFACEHUB_API_TOKEN = st.secrets
+
+HUGGINGFACEHUB_API_TOKEN = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
 if "code" not in st.session_state:
            st.session_state.code = False
