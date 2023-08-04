@@ -10,7 +10,7 @@ import requests
 
 
 load_dotenv()
-HUGGINGFACEHUB_API_TOKEN = os.environ["HUGGINGFACEHUB_API_TOKEN"]
+HUGGINGFACEHUB_API_TOKEN = st.secrets
 
 if "code" not in st.session_state:
            st.session_state.code = False

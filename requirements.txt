@@ -3,3 +3,4 @@ dotenv
 langchain
 textwrap
 streamlit
+huggingface_hub
