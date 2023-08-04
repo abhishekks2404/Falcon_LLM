@@ -1,7 +1,6 @@
 from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
 from langchain.chains.summarize import load_summarize_chain
-import textwrap
 import streamlit as st
 
 
@@ -36,11 +35,9 @@ def falcon(questions):
     prompt = PromptTemplate(template=template, input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
     response = llm_chain.run(questions)
-    wrapped_text = textwrap.fill(
-        response, width=100, break_long_words=False, replace_whitespace=False
-    )
     
-    return wrapped_text
+    
+    return response
 
 def falcon_text(questions):
     repo_id = "tiiuae/falcon-7b-instruct"  # See https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads for some other options
@@ -56,10 +53,8 @@ Answer: Go through the Question and generate a concise summary for it."""
     prompt = PromptTemplate(template=template, input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
     response = llm_chain.run(questions)
-    wrapped_text = textwrap.fill(
-        response, width=100, break_long_words=False, replace_whitespace=False
-    )
-    return wrapped_text
+    
+    return response
 
 
 def falcon_senti(questions):
@@ -76,10 +71,8 @@ Answer: Please analyze the sentiment of the following statement."""
     prompt = PromptTemplate(template=template, input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
     response = llm_chain.run(questions)
-    wrapped_text = textwrap.fill(
-        response, width=100, break_long_words=False, replace_whitespace=False
-    )
-    return wrapped_text
+    
+    return response
 
 def falcon_trans(question,transfrom,transto):
     from langchain.prompts.chat import (
@@ -162,11 +155,9 @@ Answer: Provide the required codes for the statement. Only provide the answer in
     prompt = PromptTemplate(template=template, input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
     response = llm_chain.run(questions)
-    wrapped_text = textwrap.fill(
-        response, width=100, break_long_words=False, replace_whitespace=False
-    )
-    print(wrapped_text)
-    return wrapped_text
+    
+    print(response)
+    return response
 
 
 st.set_page_config(page_title="Falcon LLM")
