@@ -481,7 +481,7 @@ if (st.session_state.chatwithcsv):
    st.write("")
 
    st.write("")
-   st.subheader("Coming Soon...")
+   st.subheader("Coming Soon.....")
 
 
 if (st.session_state.maths): 
@@ -490,7 +490,7 @@ if (st.session_state.maths):
    st.write("")
 
    st.write("")
-   st.subheader("Coming Soon...")
+   st.subheader("Coming Soon.....")
 
 
             
