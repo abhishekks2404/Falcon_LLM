@@ -216,6 +216,7 @@ with st.sidebar:
    
         
    st.caption("Get your Token -> login to huggingface -> Account settings -> Access Tokens")
+   st.caption("Your key will be not stored, it gets reset once you reload or close your page")
    
    if(st.session_state.final):
 
