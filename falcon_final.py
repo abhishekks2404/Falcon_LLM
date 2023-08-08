@@ -2,15 +2,14 @@ from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
 from langchain.chains.summarize import load_summarize_chain
 import streamlit as st
-import PyPDF2
+import pdfplumber
 import docx
 
 def extract_text_from_pdf(pdf_file):
-    pdf_reader = PyPDF2.PdfReader(pdf_file)
-    text = ""
-    for page_num in range(len(pdf_reader.pages)):
-        page = pdf_reader.pages[page_num]
-        text += page.extract_text()
+    with pdfplumber.open(pdf_file) as pdf:
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text()
     return text
 
 def extract_text_from_docx(docx_file):

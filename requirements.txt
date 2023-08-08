@@ -1,8 +1,5 @@
 python-docx
-PyMuPDF
-
-
+PyPDF2
 langchain
-
 streamlit
 huggingface_hub
