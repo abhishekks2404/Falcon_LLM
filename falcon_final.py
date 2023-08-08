@@ -56,21 +56,28 @@ keyy = st.session_state.hugkey
 
 
 
-def falcon(questions,keyy):
+def falcon(question,keyy):
+    
+
+    from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+    )
     falcon_llm = HuggingFaceHub(
         repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 500}
         )
-    
 
-    template = """Question: {questions}
+    template = """Answer the {question} """
+    system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+    human_template = "{question} "
+    human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
+    chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
 
-Answer: Go through the Question and chat like a human."""
 
-    prompt = PromptTemplate(template=template, input_variables=["questions"])
-    llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
-    response = llm_chain.run(questions)
-       
-    return response
+    chain = LLMChain(llm=falcon_llm, prompt=chat_prompt)
+    result = chain.run(question=question)
+    return result
 
 def falcon_text(questions,keyy):
     falcon_llm = HuggingFaceHub(
