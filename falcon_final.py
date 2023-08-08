@@ -2,9 +2,23 @@ from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
 from langchain.chains.summarize import load_summarize_chain
 import streamlit as st
+import fitz
+import docx
 
+def extract_text_from_pdf(pdf_file):
+    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    text = ""
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+        text += page.get_text()
+    return text
 
-
+def extract_text_from_docx(docx_file):
+    doc = docx.Document(docx_file)
+    text = ""
+    for paragraph in doc.paragraphs:
+        text += paragraph.text + "\n"
+    return text
 
 if "code" not in st.session_state:
            st.session_state.code = False
@@ -61,7 +75,7 @@ Answer: Go through the Question and reply like human."""
 
 def falcon_text(questions,keyy):
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 6000}
         )
     
 
@@ -331,6 +345,29 @@ if (st.session_state.textsum):
    title3 = st.text_input('Enter you text')
    answer2 = "Go through the Question and generate a concise summary for it."
    generate = st.button("Generate Summary")
+
+   uploaded_file = st.file_uploader("Upload any Document file to Summaries", type=["docx","pdf"])
+
+   if uploaded_file is not None:
+        # Read CSV file
+        st.write("Uploaded file:", uploaded_file.name)
+
+        if uploaded_file.type == "application/pdf":
+            text = extract_text_from_pdf(uploaded_file)
+        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+            text = extract_text_from_docx(uploaded_file)
+        else:
+            text = "Unsupported format"
+
+        st.subheader("Extracted Text:")
+        st.text_area("Extracted Text", text, height=400)
+        generate21 = st.button("Generate Doc Summary")
+        if(generate21):
+            with st.spinner("Generating Summary...."):
+                output = falcon_text(text,st.session_state.hugkey)
+                st.write(output)
+
+
    if(generate):
       with st.spinner("Generating Summary...."):
             output = falcon_text(title3,st.session_state.hugkey)
