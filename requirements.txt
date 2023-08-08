@@ -1,5 +1,5 @@
 python-docx
-PyPDF2
+pdfplumber
 langchain
 streamlit
 huggingface_hub
