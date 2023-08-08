@@ -2,14 +2,15 @@ from langchain import HuggingFaceHub
 from langchain import PromptTemplate, LLMChain, OpenAI
 from langchain.chains.summarize import load_summarize_chain
 import streamlit as st
-import pdfplumber
+import PyPDF2
 import docx
 
 def extract_text_from_pdf(pdf_file):
-    with pdfplumber.open(pdf_file) as pdf:
-        text = ""
-        for page in pdf.pages:
-            text += page.extract_text()
+    pdf_reader = PyPDF2.PdfReader(pdf_file)
+    text = ""
+    for page_num in range(len(pdf_reader.pages)):
+        page = pdf_reader.pages[page_num]
+        text += page.extract_text()
     return text
 
 def extract_text_from_docx(docx_file):
@@ -57,24 +58,23 @@ keyy = st.session_state.hugkey
 
 def falcon(questions,keyy):
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 500}
         )
     
 
-    template = """Question: {question}
+    template = """Question: {questions}
 
-Answer: Go through the Question and reply like human."""
+Answer: Go through the Question and chat like a human."""
 
-    prompt = PromptTemplate(template=template, input_variables=["question"])
+    prompt = PromptTemplate(template=template, input_variables=["questions"])
     llm_chain = LLMChain(prompt=prompt, llm=falcon_llm)
     response = llm_chain.run(questions)
-    
-    
+       
     return response
 
 def falcon_text(questions,keyy):
     falcon_llm = HuggingFaceHub(
-        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 6000}
+        repo_id=repo_id, huggingfacehub_api_token = keyy , model_kwargs={"temperature": 0.2, "max_new_tokens": 2000}
         )
     
 
